@@ -20,6 +20,7 @@ const ParticipantEventBrowser = () => {
         groupId: '',
         name: '',
         email: user?.email || '',
+        phone: '',
         institute: '',
         department: '',
         isGroupLeader: false
@@ -97,7 +98,9 @@ const ParticipantEventBrowser = () => {
         const errors = {};
         if (!formData.name.trim()) errors.name = 'Name is required';
         if (!formData.email.trim()) errors.email = 'Email is required';
+        if (!formData.phone.trim()) errors.phone = 'Phone number is required';
         if (!formData.institute) errors.institute = 'Institute is required';
+        if (!formData.department) errors.department = 'Department is required';
         if (!formData.department) errors.department = 'Department is required';
 
         if (registrationType === 'new' && !formData.groupName.trim()) {
@@ -128,8 +131,8 @@ const ParticipantEventBrowser = () => {
 
             // Add participant to group
             const participantRes = await api.post(`/groups/${groupId}/participants`, {
-                name: formData.name,
-                email: formData.email,
+                fullName: formData.name,
+                phone: formData.phone,
                 institute: formData.institute,
                 department: formData.department,
                 isGroupLeader: registrationType === 'new' ? true : formData.isGroupLeader
@@ -143,6 +146,7 @@ const ParticipantEventBrowser = () => {
                     groupId: '',
                     name: '',
                     email: user?.email || '',
+                    phone: '',
                     institute: '',
                     department: '',
                     isGroupLeader: false
@@ -289,14 +293,33 @@ const ParticipantEventBrowser = () => {
                             </Col>
                             <Col md={6}>
                                 <Form.Group className="mb-3">
+                                    <Form.Label className="fw-bold text-muted small">Phone</Form.Label>
+                                    <Form.Control
+                                        type="tel"
+                                        placeholder="10-digit phone number"
+                                        value={formData.phone}
+                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                        isInvalid={!!formErrors.phone}
+                                    />
+                                    <Form.Control.Feedback type="invalid">{formErrors.phone}</Form.Control.Feedback>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col md={6}>
+                                <Form.Group className="mb-3">
                                     <Form.Label className="fw-bold text-muted small">Email</Form.Label>
                                     <Form.Control
                                         type="email"
                                         value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        disabled
                                         isInvalid={!!formErrors.email}
                                     />
                                     <Form.Control.Feedback type="invalid">{formErrors.email}</Form.Control.Feedback>
+                                    <Form.Text className="text-muted small d-block mt-1">
+                                        Uses your login email
+                                    </Form.Text>
                                 </Form.Group>
                             </Col>
                         </Row>

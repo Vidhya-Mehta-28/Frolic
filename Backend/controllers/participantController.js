@@ -1,6 +1,21 @@
 import { Participant, Group, Event } from '../models/index.js';
 import { sendResponse } from '../utils/responseHandler.js';
 
+// @desc    Get all participants
+// @route   GET /api/participants
+export const getParticipants = async (req, res) => {
+    try {
+        const participants = await Participant.find()
+            .populate('institute', 'name')
+            .populate('department', 'name')
+            .populate('user', 'username email')
+            .populate('group', 'name');
+        sendResponse(res, 200, true, participants, 'All participants fetched');
+    } catch (error) {
+        sendResponse(res, 500, false, null, error.message);
+    }
+};
+
 // @desc    Get all participants in a group
 // @route   GET /api/groups/:groupId/participants
 export const getGroupParticipants = async (req, res) => {
@@ -16,8 +31,9 @@ export const getGroupParticipants = async (req, res) => {
 // @route   POST /api/groups/:groupId/participants
 export const addParticipantToGroup = async (req, res) => {
     try {
-        const { fullName, email, phone, institute, department, user, isGroupLeader } = req.body;
+        const { fullName, phone, institute, department, isGroupLeader } = req.body;
         const groupId = req.params.groupId;
+        const userId = req.user._id; // Get user from authenticated request
 
         const group = await Group.findById(groupId).populate('event');
         if (!group) {
@@ -30,6 +46,17 @@ export const addParticipantToGroup = async (req, res) => {
             return sendResponse(res, 400, false, null, `Group capacity exceeded. Max allowed is ${event.groupMaxParticipants}`);
         }
 
+        // Check if user is already a participant in this event
+        const groups = await Group.find({ event: event._id }).select('_id');
+        const groupIds = groups.map(g => g._id);
+        const existingParticipant = await Participant.findOne({ 
+            user: userId, 
+            group: { $in: groupIds } 
+        });
+        if (existingParticipant) {
+            return sendResponse(res, 400, false, null, 'You are already registered for this event');
+        }
+
         if (isGroupLeader) {
             const leaderExists = await Participant.findOne({ group: groupId, isGroupLeader: true });
             if (leaderExists) {
@@ -38,7 +65,12 @@ export const addParticipantToGroup = async (req, res) => {
         }
 
         const participant = await Participant.create({
-            fullName, email, phone, institute, department, user,
+            fullName,
+            phone,
+            email: req.user.email,
+            institute,
+            department,
+            user: userId,
             group: groupId,
             isGroupLeader: isGroupLeader || false
         });

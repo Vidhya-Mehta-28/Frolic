@@ -1,6 +1,21 @@
 import { EventWiseWinner, Event } from '../models/index.js';
 import { sendResponse } from '../utils/responseHandler.js';
 
+// @desc    Get all winners
+// @route   GET /api/winners
+export const getWinners = async (req, res) => {
+    try {
+        const winners = await EventWiseWinner.find()
+            .sort({ createdAt: -1 })
+            .populate('event', 'title')
+            .populate('participant', 'fullName email')
+            .populate('group', 'name');
+        sendResponse(res, 200, true, winners, 'All winners fetched');
+    } catch (error) {
+        sendResponse(res, 500, false, null, error.message);
+    }
+};
+
 // @desc    Get all winners for an event
 // @route   GET /api/events/:eventId/winners
 export const getEventWinners = async (req, res) => {

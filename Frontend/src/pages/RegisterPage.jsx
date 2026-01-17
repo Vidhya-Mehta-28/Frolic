@@ -70,121 +70,334 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="d-flex align-items-center justify-content-center min-vh-100" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-            <div className="glass-panel p-5 text-center shadow-lg" style={{ maxWidth: '500px', width: '100%' }}>
-                <div className="mb-4 text-center">
-                    <div className="d-inline-block p-3 rounded-circle bg-soft-green mb-3">
-                        <FiHexagon size={40} className="text-emerald-green" />
+        <div 
+            className="d-flex align-items-center justify-content-center min-vh-100"
+            style={{ 
+                background: 'linear-gradient(135deg, #FBF9FE 0%, #F8F5FD 100%)',
+                minHeight: '100vh',
+                padding: '20px'
+            }}
+        >
+            <div 
+                className="shadow-sm"
+                style={{ 
+                    maxWidth: '520px', 
+                    width: '100%',
+                    background: '#ffffff',
+                    borderRadius: '20px',
+                    padding: '50px 40px',
+                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)'
+                }}
+            >
+                {/* Header */}
+                <div className="mb-5 text-center">
+                    <div 
+                        className="d-inline-block p-4 rounded-circle mb-4"
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(196, 143, 224, 0.2), rgba(230, 217, 240, 0.15))',
+                        }}
+                    >
+                        <FiHexagon size={44} style={{ color: '#C48FE0' }} />
                     </div>
-                    <h2 className="fw-bold text-gradient">Create Account</h2>
-                    <p className="text-muted">Start your journey with Frolic Events</p>
+                    <h1 className="fw-bold mb-2" style={{ fontSize: '2rem', color: '#2D5A3D' }}>
+                        Create Account
+                    </h1>
+                    <p className="text-muted mb-0" style={{ color: '#4A6B5A', fontSize: '0.95rem' }}>
+                        Join the competition and show your skills
+                    </p>
                 </div>
 
                 <Form onSubmit={handleRegister}>
-                    <Form.Group className="mb-3 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Full Name</Form.Label>
-                        <div className="input-group overflow-hidden rounded-3 border">
-                            <span className="input-group-text bg-white border-0 text-muted"><FiUser /></span>
-                            <Form.Control
-                                type="text"
-                                name="fullName"
-                                placeholder="Enter your name"
-                                value={formData.fullName}
-                                onChange={handleChange}
-                                className={`bg-white border-0 ps-0 shadow-none py-2 ${errors.fullName ? 'is-invalid' : ''}`}
-                            />
-                        </div>
-                        {errors.fullName && <small className="text-danger ms-1">{errors.fullName}</small>}
+                    {/* Full Name Input */}
+                    <Form.Group className="mb-4 text-start">
+                        <Form.Label className="fw-600 mb-2 d-flex align-items-center gap-2" style={{ color: '#6D5C54', fontSize: '0.9rem' }}>
+                            <FiUser size={16} style={{ color: '#C48FE0' }} />
+                            Full Name
+                        </Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="fullName"
+                            placeholder="Enter your full name"
+                            value={formData.fullName}
+                            onChange={handleChange}
+                            style={{
+                                borderRadius: '12px',
+                                border: `2px solid ${errors.fullName ? '#F5A6A0' : '#F0E0D8'}`,
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                background: '#f9fafb',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onFocus={(e) => {
+                                if (!errors.fullName) {
+                                    e.target.style.borderColor = '#10b981';
+                                    e.target.style.background = '#ffffff';
+                                }
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = errors.fullName ? '#F5A6A0' : '#F0E0D8';
+                                e.target.style.background = '#FFFBF8';
+                            }}
+                            className="shadow-none"
+                        />
+                        {errors.fullName && (
+                            <small className="text-danger mt-2 d-block" style={{ fontSize: '0.8rem' }}>{errors.fullName}</small>
+                        )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Email Address</Form.Label>
-                        <div className="input-group overflow-hidden rounded-3 border">
-                            <span className="input-group-text bg-white border-0 text-muted"><FiMail /></span>
-                            <Form.Control
-                                type="email"
-                                name="email"
-                                placeholder="name@example.com"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={`bg-white border-0 ps-0 shadow-none py-2 ${errors.email ? 'is-invalid' : ''}`}
-                            />
-                        </div>
-                        {errors.email && <small className="text-danger ms-1">{errors.email}</small>}
+                    {/* Email Input */}
+                    <Form.Group className="mb-4 text-start">
+                        <Form.Label className="fw-600 mb-2 d-flex align-items-center gap-2" style={{ color: '#6D5C54', fontSize: '0.9rem' }}>
+                            <FiMail size={16} style={{ color: '#A8E6D9' }} />
+                            Email Address
+                        </Form.Label>
+                        <Form.Control
+                            type="email"
+                            name="email"
+                            placeholder="your@email.com"
+                            value={formData.email}
+                            onChange={handleChange}
+                            style={{
+                                borderRadius: '12px',
+                                border: `2px solid ${errors.email ? '#F5A6A0' : '#F0E0D8'}`,
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                background: '#f9fafb',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onFocus={(e) => {
+                                if (!errors.email) {
+                                    e.target.style.borderColor = '#10b981';
+                                    e.target.style.background = '#ffffff';
+                                }
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = errors.email ? '#F5A6A0' : '#F0E0D8';
+                                e.target.style.background = '#FFFBF8';
+                            }}
+                            className="shadow-none"
+                        />
+                        {errors.email && (
+                            <small className="text-danger mt-2 d-block" style={{ fontSize: '0.8rem' }}>{errors.email}</small>
+                        )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Phone Number</Form.Label>
-                        <div className="input-group overflow-hidden rounded-3 border">
-                            <span className="input-group-text bg-white border-0 text-muted"><FiPhone /></span>
-                            <Form.Control
-                                type="text"
-                                name="phone"
-                                placeholder="1234567890"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                className={`bg-white border-0 ps-0 shadow-none py-2 ${errors.phone ? 'is-invalid' : ''}`}
-                            />
-                        </div>
-                        {errors.phone && <small className="text-danger ms-1">{errors.phone}</small>}
+                    {/* Phone Input */}
+                    <Form.Group className="mb-4 text-start">
+                        <Form.Label className="fw-600 mb-2 d-flex align-items-center gap-2" style={{ color: '#6D5C54', fontSize: '0.9rem' }}>
+                            <FiPhone size={16} style={{ color: '#A8E6D9' }} />
+                            Phone Number
+                        </Form.Label>
+                        <Form.Control
+                            type="tel"
+                            name="phone"
+                            placeholder="10-digit phone number"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            style={{
+                                borderRadius: '12px',
+                                border: `2px solid ${errors.phone ? '#F5A6A0' : '#F0E0D8'}`,
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                background: '#f9fafb',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onFocus={(e) => {
+                                if (!errors.phone) {
+                                    e.target.style.borderColor = '#10b981';
+                                    e.target.style.background = '#ffffff';
+                                }
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = errors.phone ? '#F5A6A0' : '#F0E0D8';
+                                e.target.style.background = '#FFFBF8';
+                            }}
+                            className="shadow-none"
+                        />
+                        {errors.phone && (
+                            <small className="text-danger mt-2 d-block" style={{ fontSize: '0.8rem' }}>{errors.phone}</small>
+                        )}
                     </Form.Group>
 
-                    <Form.Group className="mb-3 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Account Type</Form.Label>
+                    {/* Role Selection */}
+                    <Form.Group className="mb-4 text-start">
+                        <Form.Label className="fw-600 mb-2" style={{ color: '#374151', fontSize: '0.9rem' }}>
+                            Account Type
+                        </Form.Label>
                         <Form.Select
                             name="role"
                             value={formData.role}
                             onChange={handleChange}
-                            className="py-2 rounded-3"
+                            style={{
+                                borderRadius: '12px',
+                                border: '2px solid #e5e7eb',
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                background: '#f9fafb',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onFocus={(e) => {
+                                e.target.style.borderColor = '#A8E6D9';
+                                e.target.style.background = '#ffffff';
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = '#F0E0D8';
+                                e.target.style.background = '#FFFBF8';
+                            }}
+                            className="shadow-none"
                         >
                             <option value="student">Student / Participant</option>
                             <option value="coordinator">Coordinator</option>
                             <option value="admin">Administrator</option>
                         </Form.Select>
-                        <small className="text-muted ms-1">Choose your role in the system</small>
+                        <small className="text-muted mt-2 d-block" style={{ color: '#6b7280', fontSize: '0.8rem' }}>
+                            Choose your role in the system
+                        </small>
                     </Form.Group>
 
-                    <Form.Group className="mb-3 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Password</Form.Label>
-                        <div className="input-group overflow-hidden rounded-3 border">
-                            <span className="input-group-text bg-white border-0 text-muted"><FiLock /></span>
-                            <Form.Control
-                                type="password"
-                                name="password"
-                                placeholder="Create a password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className={`bg-white border-0 ps-0 shadow-none py-2 ${errors.password ? 'is-invalid' : ''}`}
-                            />
-                        </div>
-                        {errors.password && <small className="text-danger ms-1">{errors.password}</small>}
-                    </Form.Group>
-
+                    {/* Password Input */}
                     <Form.Group className="mb-4 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Confirm Password</Form.Label>
-                        <div className="input-group overflow-hidden rounded-3 border">
-                            <span className="input-group-text bg-white border-0 text-muted"><FiLock /></span>
-                            <Form.Control
-                                type="password"
-                                name="confirmPassword"
-                                placeholder="Confirm password"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                className={`bg-white border-0 ps-0 shadow-none py-2 ${errors.confirmPassword ? 'is-invalid' : ''}`}
-                            />
-                        </div>
-                        {errors.confirmPassword && <small className="text-danger ms-1">{errors.confirmPassword}</small>}
+                        <Form.Label className="fw-600 mb-2 d-flex align-items-center gap-2" style={{ color: '#374151', fontSize: '0.9rem' }}>
+                            <FiLock size={16} style={{ color: '#10b981' }} />
+                            Password
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            placeholder="Create a strong password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            style={{
+                                borderRadius: '12px',
+                                border: `2px solid ${errors.password ? '#F5A6A0' : '#F0E0D8'}`,
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                background: '#f9fafb',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onFocus={(e) => {
+                                if (!errors.password) {
+                                    e.target.style.borderColor = '#10b981';
+                                    e.target.style.background = '#ffffff';
+                                }
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = errors.password ? '#F5A6A0' : '#F0E0D8';
+                                e.target.style.background = '#FFFBF8';
+                            }}
+                            className="shadow-none"
+                        />
+                        {errors.password && (
+                            <small className="text-danger mt-2 d-block" style={{ fontSize: '0.8rem' }}>{errors.password}</small>
+                        )}
                     </Form.Group>
 
-                    {errors.general && <div className="alert alert-danger p-2 small mb-3">{errors.general}</div>}
+                    {/* Confirm Password Input */}
+                    <Form.Group className="mb-5 text-start">
+                        <Form.Label className="fw-600 mb-2 d-flex align-items-center gap-2" style={{ color: '#6D5C54', fontSize: '0.9rem' }}>
+                            <FiLock size={16} style={{ color: '#A8E6D9' }} />
+                            Confirm Password
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Re-enter your password"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            style={{
+                                borderRadius: '12px',
+                                border: `2px solid ${errors.confirmPassword ? '#F5A6A0' : '#F0E0D8'}`,
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                background: '#f9fafb',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onFocus={(e) => {
+                                if (!errors.confirmPassword) {
+                                    e.target.style.borderColor = '#10b981';
+                                    e.target.style.background = '#ffffff';
+                                }
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = errors.confirmPassword ? '#F5A6A0' : '#F0E0D8';
+                                e.target.style.background = '#FFFBF8';
+                            }}
+                            className="shadow-none"
+                        />
+                        {errors.confirmPassword && (
+                            <small className="text-danger mt-2 d-block" style={{ fontSize: '0.8rem' }}>{errors.confirmPassword}</small>
+                        )}
+                    </Form.Group>
 
-                    <Button variant="primary" type="submit" className="w-100 py-3 fw-bold shadow-sm rounded-3">
+                    {/* Error Alert */}
+                    {errors.general && (
+                        <div 
+                            className="alert mb-4 py-3 px-4 d-flex align-items-center gap-2"
+                            style={{
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                borderRadius: '12px',
+                                color: '#C85A54',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            <span>⚠️</span>
+                            <span>{errors.general}</span>
+                        </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <Button 
+                        variant="primary" 
+                        type="submit" 
+                        className="w-100 fw-bold text-white shadow-sm"
+                        style={{
+                            background: 'linear-gradient(135deg, #2D5A3D 0%, #1F4529 100%)',
+                            border: 'none',
+                            padding: '14px',
+                            borderRadius: '12px',
+                            fontSize: '1rem',
+                            letterSpacing: '0.5px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 8px 20px rgba(168, 230, 217, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 12px 28px rgba(168, 230, 217, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 8px 20px rgba(168, 230, 217, 0.3)';
+                        }}
+                    >
                         CREATE ACCOUNT
                     </Button>
                 </Form>
 
-                <div className="mt-4 text-muted small">
-                    <p>Already have an account? <Link to="/login" className="text-emerald-green fw-bold text-decoration-none">Log In</Link></p>
+                {/* Footer */}
+                <div className="mt-5 text-center">
+                    <p className="text-muted mb-0" style={{ color: '#6b7280', fontSize: '0.95rem' }}>
+                        Already have an account?{' '}
+                        <Link 
+                            to="/login" 
+                            style={{
+                                color: '#A8E6D9',
+                                fontWeight: '600',
+                                textDecoration: 'none',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.color = '#8CDCC9';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.color = '#A8E6D9';
+                            }}
+                        >
+                            Log In
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>

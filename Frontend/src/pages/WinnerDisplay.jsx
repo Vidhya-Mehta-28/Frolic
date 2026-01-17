@@ -26,28 +26,66 @@ const WinnerDisplay = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const { data } = await api.get('/winners');
-            if (data.success) {
-                // Group winners by event
-                const grouped = data.data.reduce((acc, curr) => {
-                    const eventId = curr.event?._id || curr.event;
-                    const eventTitle = curr.event?.title || 'Unknown Event';
-                    if (!acc[eventId]) acc[eventId] = { _id: eventId, eventName: eventTitle, winners: [] };
-                    acc[eventId].winners.push(curr);
-                    return acc;
-                }, {});
-                setEventResults(Object.values(grouped));
+            try {
+                const { data } = await api.get('/admin/winners');
+                if (data.success) {
+                    // Group winners by event
+                    const grouped = data.data.reduce((acc, curr) => {
+                        const eventId = curr.event?._id || curr.event;
+                        const eventTitle = curr.event?.title || 'Unknown Event';
+                        if (!acc[eventId]) acc[eventId] = { _id: eventId, eventName: eventTitle, winners: [] };
+                        acc[eventId].winners.push(curr);
+                        return acc;
+                    }, {});
+                    setEventResults(Object.values(grouped));
+                }
+            } catch (winnersErr) {
+                console.log('Winners endpoint note:', winnersErr.message);
+                setEventResults([]);
             }
 
             if (user?.role === 'admin' || user?.role === 'coordinator') {
-                const [eRes, gRes, pRes] = await Promise.all([
-                    api.get('/events'),
-                    api.get('/groups'),
-                    api.get('/participants')
-                ]);
-                setEvents(eRes.data.data.events || eRes.data.data);
-                setGroups(gRes.data.data.groups || gRes.data.data);
-                setParticipants(pRes.data.data.participants || pRes.data.data);
+                try {
+                    const eRes = await api.get('/events?limit=1000');
+                    const gRes = await api.get('/groups');
+                    const pRes = await api.get('/participants');
+                    
+                    // Handle events response - get events from nested structure
+                    let eventsList = [];
+                    if (eRes.data.data?.events && Array.isArray(eRes.data.data.events)) {
+                        eventsList = eRes.data.data.events;
+                    } else if (Array.isArray(eRes.data.data)) {
+                        eventsList = eRes.data.data;
+                    } else if (eRes.data.success && eRes.data.data) {
+                        // Try to extract events from response
+                        eventsList = Object.values(eRes.data.data).find(val => Array.isArray(val)) || [];
+                    }
+                    console.log('Final events list:', eventsList);
+                    setEvents(eventsList);
+                    
+                    // Handle groups response
+                    let groupsList = [];
+                    if (gRes.data.data?.groups && Array.isArray(gRes.data.data.groups)) {
+                        groupsList = gRes.data.data.groups;
+                    } else if (Array.isArray(gRes.data.data)) {
+                        groupsList = gRes.data.data;
+                    }
+                    setGroups(groupsList);
+                    
+                    // Handle participants response
+                    let participantsList = [];
+                    if (pRes.data.data?.participants && Array.isArray(pRes.data.data.participants)) {
+                        participantsList = pRes.data.data.participants;
+                    } else if (Array.isArray(pRes.data.data)) {
+                        participantsList = pRes.data.data;
+                    }
+                    setParticipants(participantsList);
+                } catch (dropdownErr) {
+                    console.error('Error fetching dropdown data:', dropdownErr);
+                    alert('Error loading form data: ' + dropdownErr.message);
+                }
+            } else {
+                console.log('User is not admin/coordinator:', user?.role);
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch results');
@@ -80,17 +118,31 @@ const WinnerDisplay = () => {
 
     const handleSave = async () => {
         try {
+            if (!formData.event) {
+                alert('Please select an event');
+                return;
+            }
+
             let res;
             if (editMode) {
-                res = await api.put(`/winners/${selectedId}`, formData);
+                // Update existing winner
+                res = await api.put(`/admin/winners/${selectedId}`, formData);
             } else {
-                res = await api.post('/winners', formData);
+                // Create new winner - use event-specific endpoint
+                const payload = {
+                    rank: formData.rank,
+                    prize: formData.prize,
+                    participant: formData.participant || undefined,
+                    group: formData.group || undefined
+                };
+                res = await api.post(`/events/${formData.event}/winners`, payload);
             }
             if (res.data.success) {
                 setShowModal(false);
                 fetchData();
             }
         } catch (err) {
+            console.error('Save error:', err);
             alert(err.response?.data?.message || 'Action failed');
         }
     };
@@ -98,7 +150,7 @@ const WinnerDisplay = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to remove this winner record?')) {
             try {
-                await api.delete(`/winners/${id}`);
+                await api.delete(`/admin/winners/${id}`);
                 fetchData();
             } catch (err) {
                 alert(err.response?.data?.message || 'Delete failed');

@@ -47,75 +47,222 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="d-flex align-items-center justify-content-center min-vh-100" style={{ backgroundColor: 'var(--bg-secondary)' }}>
-            <div className="glass-panel p-5 text-center shadow-lg" style={{ maxWidth: '450px', width: '100%' }}>
-                <div className="mb-4 text-center">
-                    <div className="d-inline-block p-3 rounded-circle bg-soft-gold mb-3">
-                        <FiHexagon size={40} className="text-gold-accent" />
+        <div 
+            className="d-flex align-items-center justify-content-center min-vh-100"
+            style={{ 
+                background: 'linear-gradient(135deg, #FBF9FE 0%, #F8F5FD 100%)',
+                minHeight: '100vh'
+            }}
+        >
+            <div 
+                className="shadow-sm"
+                style={{ 
+                    maxWidth: '450px', 
+                    width: '100%',
+                    background: '#ffffff',
+                    borderRadius: '20px',
+                    padding: '50px 40px',
+                    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.08)',
+                    margin: '20px'
+                }}
+            >
+                {/* Header */}
+                <div className="mb-5 text-center">
+                    <div 
+                        className="d-inline-block p-4 rounded-circle mb-4"
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(196, 143, 224, 0.2), rgba(230, 217, 240, 0.15))',
+                        }}
+                    >
+                        <FiHexagon size={44} style={{ color: '#C48FE0' }} />
                     </div>
-                    <h2 className="fw-bold text-gradient">Welcome Back</h2>
-                    <p className="text-muted">Sign in to access Frolic Portal</p>
+                    <h1 className="fw-bold mb-2" style={{ fontSize: '2rem', color: '#2D5A3D' }}>
+                        Welcome Back
+                    </h1>
+                    <p className="text-muted mb-0" style={{ color: '#4A6B5A', fontSize: '0.95rem' }}>
+                        Sign in to access your account
+                    </p>
                 </div>
 
-                <div className="p-1 bg-light rounded-pill mb-4 border shadow-sm">
-                    <ButtonGroup className="w-100">
-                        <Button
-                            variant={role === 'participant' ? 'primary' : 'light'}
-                            className={`rounded-pill border-0 small fw-bold py-2 ${role === 'participant' ? '' : 'text-muted'}`}
-                            onClick={() => setRole('participant')}
+                {/* Role Toggle */}
+                <div 
+                    className="p-1 rounded-pill mb-5 d-flex gap-2"
+                    style={{ 
+                        background: '#f3f4f6',
+                        padding: '6px'
+                    }}
+                >
+                    {['Participant', 'Admin'].map((r) => (
+                        <button
+                            key={r.toLowerCase()}
+                            onClick={() => setRole(r.toLowerCase())}
+                            style={{
+                                flex: 1,
+                                padding: '12px 16px',
+                                border: 'none',
+                                borderRadius: '10px',
+                                fontSize: '0.9rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                background: role === r.toLowerCase() 
+                                    ? 'linear-gradient(135deg, #C48FE0, #B88FD4)' 
+                                    : 'transparent',
+                                color: role === r.toLowerCase() ? '#ffffff' : '#4A6B5A',
+                                letterSpacing: '0.3px'
+                            }}
                         >
-                            Participant
-                        </Button>
-                        <Button
-                            variant={role === 'admin' ? 'primary' : 'light'}
-                            className={`rounded-pill border-0 small fw-bold py-2 ${role === 'admin' ? '' : 'text-muted'}`}
-                            onClick={() => setRole('admin')}
-                        >
-                            Admin
-                        </Button>
-                    </ButtonGroup>
+                            {r}
+                        </button>
+                    ))}
                 </div>
 
+                {/* Form */}
                 <Form onSubmit={handleLogin}>
-                    <Form.Group className="mb-3 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Username / Email</Form.Label>
-                        <div className="input-group overflow-hidden rounded-3 border">
-                            <span className="input-group-text bg-white border-0 text-muted"><FiUser /></span>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter username"
-                                value={formData.username}
-                                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                className={`bg-white border-0 ps-0 shadow-none py-2 ${errors.username ? 'is-invalid' : ''}`}
-                            />
-                        </div>
-                        {errors.username && <small className="text-danger ms-1">{errors.username}</small>}
-                    </Form.Group>
-
+                    {/* Username Input */}
                     <Form.Group className="mb-4 text-start">
-                        <Form.Label className="fw-bold text-muted small ms-1">Password</Form.Label>
-                        <div className="input-group overflow-hidden rounded-3 border">
-                            <span className="input-group-text bg-white border-0 text-muted"><FiLock /></span>
-                            <Form.Control
-                                type="password"
-                                placeholder="Password"
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                className={`bg-white border-0 ps-0 shadow-none py-2 ${errors.password ? 'is-invalid' : ''}`}
-                            />
-                        </div>
-                        {errors.password && <small className="text-danger ms-1">{errors.password}</small>}
+                        <Form.Label className="fw-600 mb-2 d-flex align-items-center gap-2" style={{ color: '#2D5A3D', fontSize: '0.9rem', letterSpacing: '0.3px' }}>
+                            <FiUser size={16} style={{ color: '#C48FE0' }} />
+                            Username / Email
+                        </Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter your username or email"
+                            value={formData.username}
+                            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                            style={{
+                                borderRadius: '12px',
+                                border: `2px solid ${errors.username ? '#E68B96' : '#E6D9F0'}`,
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                transition: 'all 0.3s ease',
+                                background: '#f9fafb'
+                            }}
+                            onFocus={(e) => {
+                                if (!errors.username) {
+                                    e.target.style.borderColor = '#C48FE0';
+                                    e.target.style.background = '#ffffff';
+                                }
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = errors.username ? '#E68B96' : '#E6D9F0';
+                                e.target.style.background = '#FDFBFE';
+                            }}
+                            className="shadow-none"
+                        />
+                        {errors.username && (
+                            <small className="text-danger mt-2 d-block" style={{ fontSize: '0.8rem' }}>
+                                {errors.username}
+                            </small>
+                        )}
                     </Form.Group>
 
-                    {errors.general && <div className="alert alert-danger p-2 small mb-3">{errors.general}</div>}
+                    {/* Password Input */}
+                    <Form.Group className="mb-5 text-start">
+                        <Form.Label className="fw-600 mb-2 d-flex align-items-center gap-2" style={{ color: '#2D5A3D', fontSize: '0.9rem', letterSpacing: '0.3px' }}>
+                            <FiLock size={16} style={{ color: '#C48FE0' }} />
+                            Password
+                        </Form.Label>
+                        <Form.Control
+                            type="password"
+                            placeholder="Enter your password"
+                            value={formData.password}
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            style={{
+                                borderRadius: '12px',
+                                border: `2px solid ${errors.password ? '#E68B96' : '#E6D9F0'}`,
+                                padding: '12px 16px',
+                                fontSize: '0.95rem',
+                                transition: 'all 0.3s ease',
+                                background: '#f9fafb'
+                            }}
+                            onFocus={(e) => {
+                                if (!errors.password) {
+                                    e.target.style.borderColor = '#C48FE0';
+                                    e.target.style.background = '#ffffff';
+                                }
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = errors.password ? '#E68B96' : '#E6D9F0';
+                                e.target.style.background = '#FDFBFE';
+                            }}
+                            className="shadow-none"
+                        />
+                        {errors.password && (
+                            <small className="text-danger mt-2 d-block" style={{ fontSize: '0.8rem' }}>
+                                {errors.password}
+                            </small>
+                        )}
+                    </Form.Group>
 
-                    <Button variant="primary" type="submit" className="w-100 py-3 fw-bold shadow-sm rounded-3">
+                    {/* Error Alert */}
+                    {errors.general && (
+                        <div 
+                            className="alert mb-4 py-3 px-4 d-flex align-items-center gap-2"
+                            style={{
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                borderRadius: '12px',
+                                color: '#991b1b',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            <span>⚠️</span>
+                            <span>{errors.general}</span>
+                        </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <Button 
+                        variant="primary" 
+                        type="submit" 
+                        className="w-100 fw-bold text-white shadow-sm"
+                        style={{
+                            background: 'linear-gradient(135deg, #C48FE0 0%, #B88FD4 100%)',
+                            border: 'none',
+                            padding: '14px',
+                            borderRadius: '12px',
+                            fontSize: '1rem',
+                            letterSpacing: '0.5px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 8px 20px rgba(212, 165, 116, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 12px 28px rgba(212, 165, 116, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 8px 20px rgba(212, 165, 116, 0.3)';
+                        }}
+                    >
                         SIGN IN
                     </Button>
                 </Form>
 
-                <div className="mt-4 text-muted small">
-                    <p>Don't have an account? <Link to="/register" className="text-gold-accent fw-bold text-decoration-none">Create Account</Link></p>
+                {/* Footer */}
+                <div className="mt-5 text-center">
+                    <p className="text-muted mb-0" style={{ color: '#4A6B5A', fontSize: '0.95rem' }}>
+                        Don't have an account?{' '}
+                        <Link 
+                            to="/register" 
+                            style={{
+                                color: '#C48FE0',
+                                fontWeight: '600',
+                                textDecoration: 'none',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.color = '#B88FD4';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.color = '#C48FE0';
+                            }}
+                        >
+                            Create Account
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>

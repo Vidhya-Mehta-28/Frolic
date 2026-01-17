@@ -28,7 +28,7 @@ app.use('/api/departments', departmentRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/participants', participantRoutes);
-app.use('/api/winners', winnerRoutes);
+app.use('/api/admin/winners', winnerRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 // Basic sanity check route

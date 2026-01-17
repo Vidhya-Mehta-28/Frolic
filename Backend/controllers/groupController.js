@@ -1,6 +1,19 @@
 import { Group, Event } from '../models/index.js';
 import { sendResponse } from '../utils/responseHandler.js';
 
+// @desc    Get all groups
+// @route   GET /api/groups
+export const getGroups = async (req, res) => {
+    try {
+        const groups = await Group.find()
+            .populate('event', 'title')
+            .populate('members', 'fullName email');
+        sendResponse(res, 200, true, groups, 'All groups fetched');
+    } catch (error) {
+        sendResponse(res, 500, false, null, error.message);
+    }
+};
+
 // @desc    Get all groups for an event
 // @route   GET /api/events/:eventId/groups
 export const getEventGroups = async (req, res) => {
